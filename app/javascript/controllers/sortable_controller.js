@@ -26,7 +26,7 @@ export default class extends Controller {
           return !!$(handle).closest('.reorder-handle').length
         } else {
           if (!$(handle).closest('.undraggable').length) {
-            return $(handle).closest('[data-reorder]')[0] == container
+            return self.element === container
           } else {
             return false
           }
@@ -40,15 +40,11 @@ export default class extends Controller {
         }
       },
     }).on('drop', function (el) {
-    
       // save order here.
       self.saveSortOrder()
-    
     }).on('over', function (el, container) {
-    
       // deselect any text fields, or else things go slow!
       $(document.activeElement).blur()
-    
     })
   }
 
