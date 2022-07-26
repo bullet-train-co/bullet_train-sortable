@@ -5,7 +5,8 @@ import dragula from 'dragula';
 
 export default class extends Controller {
   static values = {
-    reorderPath: String
+    reorderPath: String,
+    saveOnReorder: { type: Boolean, default: true }
   }
   
   // will be reissued as native dom events name prepended with 'sortable:' e.g. 'sortable:drag', 'sortable:drop', etc
@@ -44,7 +45,9 @@ export default class extends Controller {
       },
     }).on('drop', function (el) {
       // save order here.
-      self.saveSortOrder()
+      if (self.saveOnReorderValue) {
+        self.saveSortOrder()
+      }
     }).on('over', function (el, container) {
       // deselect any text fields, or else things go slow!
       $(document.activeElement).blur()
