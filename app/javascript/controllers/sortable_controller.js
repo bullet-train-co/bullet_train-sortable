@@ -7,6 +7,9 @@ export default class extends Controller {
   static values = {
     reorderPath: String
   }
+  
+  // will be reissued as native dom events name prepended with 'sortable:' e.g. 'sortable:drag', 'sortable:drop', etc
+  static pluginEventsToReissue = [ "drag", "dragend", "drop", "cancel", "remove", "shadow", "over", "out", "cloned" ]
 
   connect() {
     if (!this.hasReorderPathValue) { return }
@@ -45,6 +48,16 @@ export default class extends Controller {
     }).on('over', function (el, container) {
       // deselect any text fields, or else things go slow!
       $(document.activeElement).blur()
+    })
+    
+    this.initReissuePluginEventsAsNativeEvents()
+  }
+  
+  initReissuePluginEventsAsNativeEvents() {
+    this.constructor.pluginEventsToReissue.forEach((eventName) => {
+      this.plugin.on(eventName, (...args) => {
+        this.dispatch(eventName, { detail: { plugin: 'dragula', type: eventName, args: args }})
+      })
     })
   }
 
